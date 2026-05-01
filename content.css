@@ -1,0 +1,15 @@
+/* Code blocks stay LTR regardless of surrounding content */
+pre,
+pre *,
+code {
+    direction: ltr !important;
+    text-align: left !important;
+    unicode-bidi: normal !important;
+    font-family: inherit !important;
+}
+
+/* Prevent emoji/mixed-script from causing layout shifts */
+p, li, h1, h2, h3, h4, h5, h6, td, th, blockquote {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}

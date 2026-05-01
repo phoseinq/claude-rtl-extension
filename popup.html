@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --border: #21262d;
+  --border-hover: #30363d;
+  --purple: #7c3aed;
+  --blue: #2563eb;
+  --green: #10b981;
+  --text: #c9d1d9;
+  --text-2: #8b949e;
+  --text-3: #484f58;
+  --orange: #f97316;
+}
+
+body {
+  width: 340px;
+  min-height: 480px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Vazirmatn', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+/* ─── Header ─── */
+.header {
+  background: linear-gradient(135deg, #4f1d96 0%, #1e40af 100%);
+  padding: 18px 16px 16px;
+  position: relative;
+  overflow: hidden;
+}
+.header-blob {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  pointer-events: none;
+}
+.header-blob:nth-child(1) { width: 110px; height: 110px; top: -35px; right: -25px; }
+.header-blob:nth-child(2) { width: 70px;  height: 70px;  bottom: -30px; left: 18px; }
+.header-blob:nth-child(3) { width: 40px;  height: 40px;  top: 8px; left: 60px; background: rgba(255,255,255,0.04); }
+
+.header-inner { position: relative; z-index: 1; }
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.header-title .icon { font-size: 18px; line-height: 1; }
+.badge {
+  font-family: 'Outfit', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.85);
+  padding: 2px 7px;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+}
+.header-sub {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 5px;
+  letter-spacing: 0.01em;
+}
+
+/* Status indicator */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 999px;
+  padding: 3px 9px 3px 6px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  font-family: 'Outfit', sans-serif;
+  margin-top: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  width: fit-content;
+}
+.status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(16,185,129,0.6);
+  animation: glow 2.2s ease-in-out infinite;
+}
+.status-dot.off {
+  background: var(--text-3);
+  box-shadow: none;
+  animation: none;
+}
+@keyframes glow {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+/* ─── Body ─── */
+.body { padding: 12px 12px 6px; display: flex; flex-direction: column; gap: 8px; }
+
+/* ─── Section label ─── */
+.section-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-3);
+  padding: 0 2px;
+  margin-bottom: -2px;
+  margin-top: 2px;
+}
+
+/* ─── Card ─── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 13px 14px;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: var(--border-hover); }
+
+.card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.card-label { font-size: 13.5px; font-weight: 500; color: var(--text); }
+.card-desc  { font-size: 11px; color: var(--text-3); margin-top: 3px; }
+
+/* ─── Toggle switch ─── */
+.toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; cursor: pointer; }
+.toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+.toggle-track {
+  position: absolute; inset: 0;
+  background: var(--border);
+  border-radius: 999px;
+  border: 1px solid var(--border-hover);
+  transition: background 0.25s, border-color 0.25s;
+}
+.toggle input:checked ~ .toggle-track {
+  background: var(--purple);
+  border-color: var(--purple);
+}
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 3px; right: 3px;
+  width: 16px; height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.28s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+}
+.toggle input:checked ~ .toggle-track::after { transform: translateX(-20px); }
+
+/* ─── Slider ─── */
+.slider-wrap { margin-top: 11px; }
+.slider-row  { display: flex; align-items: center; gap: 10px; }
+
+input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 5px;
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+  background: linear-gradient(to left,
+    var(--purple) var(--fill, 25%),
+    var(--border) var(--fill, 25%)
+  );
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--purple), var(--blue));
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(124,58,237,0.45);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 2px 14px rgba(124,58,237,0.65);
+}
+.slider-val {
+  min-width: 42px;
+  text-align: center;
+  font-family: 'Outfit', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--purple);
+  background: rgba(124,58,237,0.12);
+  padding: 2px 7px;
+  border-radius: 7px;
+}
+
+/* ─── Font section ─── */
+.font-rows { display: flex; flex-direction: column; gap: 11px; }
+.font-row  { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+
+.font-chip {
+  display: inline-block;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 5px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.chip-fa { background: rgba(249,115,22,0.15); color: var(--orange); }
+.chip-en { background: rgba(37,99,235,0.15);  color: #60a5fa; }
+
+/* Font preview card */
+.preview-box {
+  margin-top: 12px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  overflow: hidden;
+}
+.preview-row {
+  padding: 8px 12px;
+  line-height: 1.7;
+  font-size: 13.5px;
+  color: var(--text);
+}
+.preview-row + .preview-row { border-top: 1px solid var(--border); }
+.preview-row.fa { direction: rtl; text-align: right; font-family: 'Vazirmatn', sans-serif; }
+.preview-row.en { direction: ltr; text-align: left;  font-family: 'Outfit', sans-serif; }
+.preview-row .sample-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  opacity: 0.4;
+  display: block;
+  margin-bottom: 1px;
+}
+
+/* ─── Divider ─── */
+.divider { height: 1px; background: var(--border); margin: 2px 0; }
+
+/* ─── Footer ─── */
+.footer {
+  padding: 9px 14px 13px;
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.footer-dot { width: 3px; height: 3px; background: var(--text-3); border-radius: 50%; }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<div class="header">
+  <div class="header-blob"></div>
+  <div class="header-blob"></div>
+  <div class="header-blob"></div>
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="header-title">
+        <span class="icon">⇄</span>
+        Claude RTL
+      </div>
+      <span class="badge">v3.0</span>
+    </div>
+    <div class="header-sub">Text Direction Manager — claude.ai</div>
+    <div class="status-pill">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">فعال</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Body ── -->
+<div class="body">
+
+  <!-- Master toggle -->
+  <div class="card">
+    <div class="card-row">
+      <div>
+        <div class="card-label">فعال‌سازی افزونه</div>
+        <div class="card-desc">اعمال جهت‌بخشی خودکار به متن‌ها</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="enabled">
+        <div class="toggle-track"></div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Threshold -->
+  <div class="section-label">تشخیص زبان</div>
+  <div class="card">
+    <div class="card-label">آستانه تشخیص فارسی</div>
+    <div class="card-desc">حداقل درصد کاراکتر RTL برای راست‌چین شدن</div>
+    <div class="slider-wrap">
+      <div class="slider-row">
+        <input type="range" id="threshold" min="10" max="70" value="25" step="5">
+        <div class="slider-val" id="thresholdVal">25%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fonts -->
+  <div class="section-label">فونت‌ها</div>
+  <div class="card">
+    <div class="font-rows">
+      <div class="font-row">
+        <div>
+          <span class="font-chip chip-fa">FA</span>
+          <span class="card-label" style="display:inline">Vazirmatn</span>
+          <div class="card-desc" style="margin-top:4px">فونت مدرن فارسی با خوانایی بالا</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="fontPersian">
+          <div class="toggle-track"></div>
+        </label>
+      </div>
+      <div class="divider"></div>
+      <div class="font-row">
+        <div>
+          <span class="font-chip chip-en">EN</span>
+          <span class="card-label" style="display:inline">Outfit</span>
+          <div class="card-desc" style="margin-top:4px">فونت لاتین تمیز و مینیمال</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="fontEnglish">
+          <div class="toggle-track"></div>
+        </label>
+      </div>
+    </div>
+    <div class="preview-box">
+      <div class="preview-row fa" id="prevFa">
+        <span class="sample-label">Vazirmatn</span>
+        سلام! این یک نمونه متن فارسی است ۱۲۳
+      </div>
+      <div class="preview-row en" id="prevEn">
+        <span class="sample-label">Outfit</span>
+        Hello! This is an English sample text 123
+      </div>
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="section-label">ورودی</div>
+  <div class="card">
+    <div class="card-row">
+      <div>
+        <div class="card-label">تنظیم جهت کادر تایپ</div>
+        <div class="card-desc">هنگام نوشتن فارسی، ورودی راست‌چین شود</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="fixInput">
+        <div class="toggle-track"></div>
+      </label>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <span>Claude RTL Extension</span>
+  <span class="footer-dot"></span>
+  <span>Anthropic claude.ai</span>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

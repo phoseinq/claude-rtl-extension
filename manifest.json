@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Claude RTL – تنظیم جهت متن",
+  "version": "3.0",
+  "description": "راست‌چین فارسی / چپ‌چین انگلیسی در claude.ai",
+  "permissions": ["storage"],
+  "icons": {
+    "16":  "icon16.png",
+    "48":  "icon48.png",
+    "128": "icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Claude RTL Settings",
+    "default_icon": {
+      "16":  "icon16.png",
+      "48":  "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["fonts/*.woff2"],
+      "matches": ["https://claude.ai/*"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://claude.ai/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
