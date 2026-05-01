@@ -49,10 +49,21 @@ function removeFonts() {
 // ─── Block processing ────────────────────────────────────────────────────────
 
 function applyToBlock(el) {
-  if (!cfg.fixCodeBlocks && el.closest('pre, code')) return;
+  const codeParent = el.closest('pre, code');
+
+  if (codeParent) {
+    if (!cfg.fixCodeBlocks) return;
+    // Only process the outermost <pre> itself, not its children
+    if (codeParent !== el) return;
+    const dir = getDir(el.textContent || '');
+    if (!dir || el.dataset.rtlDir === dir) return;
+    // Use data attribute — content.css has a matching rule that overrides the !important LTR default
+    el.dataset.rtlDir = dir;
+    return;
+  }
+
   const dir = getDir(el.textContent || '');
-  if (!dir) return;
-  if (el.dataset.rtlDir === dir) return;   // already up-to-date
+  if (!dir || el.dataset.rtlDir === dir) return;
 
   el.style.direction = dir;
   el.style.textAlign = dir === 'rtl' ? 'right' : 'left';
@@ -97,6 +108,7 @@ function processAll() {
   if (!cfg.enabled) return;
   if (cfg.fontPersian || cfg.fontEnglish) injectFonts(); else removeFonts();
   document.querySelectorAll(BLOCK_SEL).forEach(applyToBlock);
+  if (cfg.fixCodeBlocks) document.querySelectorAll('pre').forEach(applyToBlock);
   watchInputs();
 }
 

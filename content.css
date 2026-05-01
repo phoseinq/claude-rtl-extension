@@ -1,4 +1,4 @@
-/* Code blocks stay LTR regardless of surrounding content */
+/* Code blocks stay LTR by default — JS override uses data attribute when fixCodeBlocks is on */
 pre,
 pre *,
 code {
@@ -6,6 +6,12 @@ code {
     text-align: left !important;
     unicode-bidi: normal !important;
     font-family: inherit !important;
+}
+
+/* Applied by JS when fixCodeBlocks setting is ON — higher specificity beats the rule above */
+pre[data-rtl-dir="rtl"] {
+    direction: rtl !important;
+    text-align: right !important;
 }
 
 /* Prevent emoji/mixed-script from causing layout shifts */
