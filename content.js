@@ -139,9 +139,10 @@ chrome.storage.sync.get('rtlSettings', ({ rtlSettings }) => {
   if (cfg.enabled) processAll();
 });
 
-chrome.storage.onChanged.addListener(changes => {
-  if (!changes.rtlSettings) return;
-  cfg = Object.assign(cfg, changes.rtlSettings.newValue);
+// Direct message from popup — instant, no page refresh needed
+chrome.runtime.onMessage.addListener((msg) => {
+  if (msg.type !== 'rtlSettingsUpdated') return;
+  cfg = Object.assign(cfg, msg.settings);
   reprocessAll();
 });
 

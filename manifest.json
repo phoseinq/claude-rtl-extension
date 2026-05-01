@@ -3,7 +3,7 @@
   "name": "Claude RTL – تنظیم جهت متن",
   "version": "3.0",
   "description": "راست‌چین فارسی / چپ‌چین انگلیسی در claude.ai",
-  "permissions": ["storage"],
+  "permissions": ["storage", "tabs"],
   "icons": {
     "16":  "icon16.png",
     "48":  "icon48.png",

@@ -61,6 +61,10 @@ function save() {
   chrome.storage.sync.set({ rtlSettings: s });
   setStatus(s.enabled);
   updatePreview(s.fontPersian, s.fontEnglish);
+  // Push settings directly to the active tab — no page refresh needed
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs[0]) chrome.tabs.sendMessage(tabs[0].id, { type: 'rtlSettingsUpdated', settings: s });
+  });
 }
 
 // Load saved settings on open
