@@ -51,6 +51,7 @@ Click the extension icon in the Chrome toolbar to open the settings panel:
 | **Vazirmatn font** | Apply Vazirmatn to Persian text |
 | **Outfit font** | Apply Outfit to English text |
 | **Fix input direction** | Auto-switch the chat input box direction while typing |
+| **Fix direction inside code blocks** | When Claude puts Persian text inside a code block (default off) |
 
 ---
 
@@ -61,6 +62,7 @@ Click the extension icon in the Chrome toolbar to open the settings panel:
 3. **Apply** — Sets `direction: rtl` + right-align, or `direction: ltr` + left-align
 4. **Font** — Injects bundled Vazirmatn / Outfit via `@font-face`
 5. **Watch** — MutationObserver keeps scanning as new messages stream in
+6. **Instant settings** — Changes in the popup apply immediately via direct tab message, no page refresh needed
 
 ---
 
@@ -138,6 +140,7 @@ If this project helped you, please consider:
 | **فونت Vazirmatn** | اعمال Vazirmatn به متن فارسی |
 | **فونت Outfit** | اعمال Outfit به متن انگلیسی |
 | **تصحیح جهت ورودی** | تغییر خودکار جهت کادر تایپ هنگام نوشتن فارسی |
+| **تصحیح جهت داخل کد بلاک‌ها** | وقتی Claude متن فارسی داخل code block می‌ذاره (پیش‌فرض خاموش) |
 
 ---
 
@@ -148,6 +151,7 @@ If this project helped you, please consider:
 3. **اعمال** — `direction: rtl` + راست‌چین، یا `direction: ltr` + چپ‌چین
 4. **فونت** — Vazirmatn / Outfit بسته‌شده رو از طریق `@font-face` تزریق می‌کنه
 5. **پایش** — MutationObserver ادامه می‌ده و پیام‌های جدید رو هم پردازش می‌کنه
+6. **تنظیمات آنی** — تغییرات popup بدون نیاز به رفرش صفحه فوری اعمال می‌شن
 
 ---
 
