@@ -63,20 +63,20 @@ function applyToBlock(el) {
 
   if (codeParent) {
     if (!cfg.fixCodeBlocks) return;
-    // Only process the outermost <pre> itself, not its children
     if (codeParent !== el) return;
-    // Use first-strong-character (Unicode Bidi P2/P3):
-    // the first letter that is clearly RTL or LTR decides the block direction.
-    // This correctly handles formulas with Persian comments — "F = A·B (دمورگان)"
-    // starts with 'F' so stays LTR, while "ببین کجاها F=1" starts with 'ب' → RTL.
-    const dir = firstStrongDir(el.textContent || '');
-    if (!dir || el.dataset.rtlDir === dir) return;
-    el.dataset.rtlDir = dir;
-    return;
   }
 
-  const dir = getDir(el.textContent || '');
+  // Use first-strong-character (Unicode Bidi P2/P3) for every block:
+  // the first clearly RTL or LTR letter decides direction.
+  // Ratio-based detection failed on mixed lines like "F = 0 توی ردیف‌های ..."
+  // because Persian comment words pushed the ratio above the threshold.
+  const dir = firstStrongDir(el.textContent || '');
   if (!dir || el.dataset.rtlDir === dir) return;
+
+  if (codeParent) {
+    el.dataset.rtlDir = dir;   // CSS attribute rule handles the actual styling
+    return;
+  }
 
   el.style.direction = dir;
   el.style.textAlign = dir === 'rtl' ? 'right' : 'left';
