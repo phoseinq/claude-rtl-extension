@@ -7,7 +7,7 @@ const BLOCK_SEL = 'p, li, h1, h2, h3, h4, h5, h6, td, th, blockquote, dt, dd';
 
 let cfg = {
   enabled: true, threshold: 25,
-  fontPersian: true, fontEnglish: true, fixInput: true,
+  fontPersian: true, fontEnglish: true, fixInput: true, fixCodeBlocks: false,
 };
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
@@ -49,7 +49,7 @@ function removeFonts() {
 // ─── Block processing ────────────────────────────────────────────────────────
 
 function applyToBlock(el) {
-  if (el.closest('pre, code')) return;
+  if (!cfg.fixCodeBlocks && el.closest('pre, code')) return;
   const dir = getDir(el.textContent || '');
   if (!dir) return;
   if (el.dataset.rtlDir === dir) return;   // already up-to-date

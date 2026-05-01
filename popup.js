@@ -4,6 +4,7 @@ const DEFAULTS = {
   fontPersian: true,
   fontEnglish: true,
   fixInput: true,
+  fixCodeBlocks: false,
 };
 
 const $ = id => document.getElementById(id);
@@ -12,9 +13,10 @@ const els = {
   enabled:      $('enabled'),
   threshold:    $('threshold'),
   thresholdVal: $('thresholdVal'),
-  fontPersian:  $('fontPersian'),
-  fontEnglish:  $('fontEnglish'),
-  fixInput:     $('fixInput'),
+  fontPersian:    $('fontPersian'),
+  fontEnglish:    $('fontEnglish'),
+  fixInput:       $('fixInput'),
+  fixCodeBlocks:  $('fixCodeBlocks'),
   statusDot:    $('statusDot'),
   statusText:   $('statusText'),
   prevFa:       $('prevFa'),
@@ -45,11 +47,12 @@ function updatePreview(fontPersian, fontEnglish) {
 
 function collect() {
   return {
-    enabled:     els.enabled.checked,
-    threshold:   +els.threshold.value,
-    fontPersian: els.fontPersian.checked,
-    fontEnglish: els.fontEnglish.checked,
-    fixInput:    els.fixInput.checked,
+    enabled:       els.enabled.checked,
+    threshold:     +els.threshold.value,
+    fontPersian:   els.fontPersian.checked,
+    fontEnglish:   els.fontEnglish.checked,
+    fixInput:      els.fixInput.checked,
+    fixCodeBlocks: els.fixCodeBlocks.checked,
   };
 }
 
@@ -64,11 +67,12 @@ function save() {
 chrome.storage.sync.get('rtlSettings', ({ rtlSettings }) => {
   const s = Object.assign({}, DEFAULTS, rtlSettings);
 
-  els.enabled.checked     = s.enabled;
-  els.threshold.value     = s.threshold;
-  els.fontPersian.checked = s.fontPersian;
-  els.fontEnglish.checked = s.fontEnglish;
-  els.fixInput.checked    = s.fixInput;
+  els.enabled.checked         = s.enabled;
+  els.threshold.value         = s.threshold;
+  els.fontPersian.checked     = s.fontPersian;
+  els.fontEnglish.checked     = s.fontEnglish;
+  els.fixInput.checked        = s.fixInput;
+  els.fixCodeBlocks.checked   = s.fixCodeBlocks;
 
   els.thresholdVal.textContent = s.threshold + '%';
   updateSliderFill(els.threshold);
@@ -84,6 +88,6 @@ els.threshold.addEventListener('input', () => {
 });
 
 // All checkboxes
-['enabled', 'fontPersian', 'fontEnglish', 'fixInput'].forEach(k => {
+['enabled', 'fontPersian', 'fontEnglish', 'fixInput', 'fixCodeBlocks'].forEach(k => {
   els[k].addEventListener('change', save);
 });
