@@ -55,9 +55,13 @@ function applyToBlock(el) {
     if (!cfg.fixCodeBlocks) return;
     // Only process the outermost <pre> itself, not its children
     if (codeParent !== el) return;
-    const dir = getDir(el.textContent || '');
-    if (!dir || el.dataset.rtlDir === dir) return;
-    // Use data attribute — content.css has a matching rule that overrides the !important LTR default
+    // Code blocks need a stricter threshold (>50%) so formulas with
+    // Persian comments don't flip RTL — only pure Persian blocks do
+    const clean = (el.textContent || '').replace(EMOJI, '').replace(NEUTRAL, '');
+    if (clean.length < 2) return;
+    const rtlCount = (clean.match(RTL_RANGE) || []).length;
+    const dir = rtlCount / clean.length > 0.5 ? 'rtl' : 'ltr';
+    if (el.dataset.rtlDir === dir) return;
     el.dataset.rtlDir = dir;
     return;
   }
