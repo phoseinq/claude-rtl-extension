@@ -12,6 +12,16 @@ let cfg = {
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
+// First strong character — Unicode Bidi P2/P3 algorithm
+// Scans until it finds a clearly RTL or LTR letter and returns its direction.
+function firstStrongDir(text) {
+  for (const ch of text) {
+    if (RTL_RANGE.test(ch))  { RTL_RANGE.lastIndex = 0; return 'rtl'; }
+    if (/[A-Za-zÀ-ɏ]/.test(ch)) return 'ltr';
+  }
+  return null;
+}
+
 function getDir(text) {
   const clean = text.replace(EMOJI, '').replace(NEUTRAL, '');
   if (clean.length < 2) return null;
@@ -55,13 +65,12 @@ function applyToBlock(el) {
     if (!cfg.fixCodeBlocks) return;
     // Only process the outermost <pre> itself, not its children
     if (codeParent !== el) return;
-    // Code blocks need a stricter threshold (>50%) so formulas with
-    // Persian comments don't flip RTL — only pure Persian blocks do
-    const clean = (el.textContent || '').replace(EMOJI, '').replace(NEUTRAL, '');
-    if (clean.length < 2) return;
-    const rtlCount = (clean.match(RTL_RANGE) || []).length;
-    const dir = rtlCount / clean.length > 0.5 ? 'rtl' : 'ltr';
-    if (el.dataset.rtlDir === dir) return;
+    // Use first-strong-character (Unicode Bidi P2/P3):
+    // the first letter that is clearly RTL or LTR decides the block direction.
+    // This correctly handles formulas with Persian comments — "F = A·B (دمورگان)"
+    // starts with 'F' so stays LTR, while "ببین کجاها F=1" starts with 'ب' → RTL.
+    const dir = firstStrongDir(el.textContent || '');
+    if (!dir || el.dataset.rtlDir === dir) return;
     el.dataset.rtlDir = dir;
     return;
   }
