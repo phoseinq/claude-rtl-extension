@@ -14,6 +14,21 @@ pre[data-rtl-dir="rtl"] {
     text-align: right !important;
 }
 
+/* Per-line direction inside code blocks (set via JS setProperty with !important) */
+pre .line[data-rtl-dir],
+pre .token-line[data-rtl-dir],
+pre .cm-line[data-rtl-dir],
+pre .view-line[data-rtl-dir] {
+    display: block !important;
+}
+pre .line[data-rtl-dir="rtl"],
+pre .token-line[data-rtl-dir="rtl"],
+pre .cm-line[data-rtl-dir="rtl"],
+pre .view-line[data-rtl-dir="rtl"] {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
 /* Prevent emoji/mixed-script from causing layout shifts */
 p, li, h1, h2, h3, h4, h5, h6, td, th, blockquote {
     overflow-wrap: break-word;

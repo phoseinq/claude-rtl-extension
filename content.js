@@ -4,6 +4,8 @@ const NEUTRAL  = /[\d\s!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~‌‍‎‏]/g;
 
 const FONTS_ID  = 'claude-rtl-fonts';
 const BLOCK_SEL = 'p, li, h1, h2, h3, h4, h5, h6, td, th, blockquote, dt, dd';
+// Common line-wrapper selectors used by shiki, prism-react-renderer, CodeMirror 6, Monaco
+const LINE_SEL  = '.line, .token-line, .cm-line, .view-line';
 
 let cfg = {
   enabled: true, threshold: 25,
@@ -58,12 +60,39 @@ function removeFonts() {
 
 // ─── Block processing ────────────────────────────────────────────────────────
 
+// Per-line detection: find line wrappers inside <code> and apply direction individually.
+// Uses setProperty('...', 'important') to beat the "pre * { direction: ltr !important }" rule.
+// Returns true if line wrappers were found and processed.
+function applyToLines(pre) {
+  const code = pre.querySelector('code');
+  if (!code) return false;
+  const lines = code.querySelectorAll(LINE_SEL);
+  if (lines.length < 2) return false;
+
+  lines.forEach(line => {
+    if (line.dataset.rtlDir) return;
+    const dir = firstStrongDir(line.textContent || '');
+    if (!dir) return;
+    line.style.setProperty('direction', dir, 'important');
+    line.style.setProperty('text-align', dir === 'rtl' ? 'right' : 'left', 'important');
+    line.style.setProperty('display', 'block', 'important');
+    line.dataset.rtlDir = dir;
+  });
+  return true;
+}
+
 function applyToBlock(el) {
   const codeParent = el.closest('pre, code');
 
   if (codeParent) {
     if (!cfg.fixCodeBlocks) return;
     if (codeParent !== el) return;
+    // Prefer per-line detection; fall back to whole-block if no line wrappers exist.
+    if (applyToLines(el)) return;
+    const dir = firstStrongDir(el.textContent || '');
+    if (!dir || el.dataset.rtlDir === dir) return;
+    el.dataset.rtlDir = dir;   // CSS attribute rule handles the actual styling
+    return;
   }
 
   // Use first-strong-character (Unicode Bidi P2/P3) for every block:
@@ -73,11 +102,6 @@ function applyToBlock(el) {
   const dir = firstStrongDir(el.textContent || '');
   if (!dir || el.dataset.rtlDir === dir) return;
 
-  if (codeParent) {
-    el.dataset.rtlDir = dir;   // CSS attribute rule handles the actual styling
-    return;
-  }
-
   el.style.direction = dir;
   el.style.textAlign = dir === 'rtl' ? 'right' : 'left';
   const font = fontFor(dir);
@@ -86,7 +110,7 @@ function applyToBlock(el) {
 }
 
 function resetBlock(el) {
-  el.style.direction = el.style.textAlign = el.style.fontFamily = '';
+  el.style.direction = el.style.textAlign = el.style.fontFamily = el.style.display = '';
   delete el.dataset.rtlDir;
 }
 
@@ -136,8 +160,10 @@ function disableAll() {
 }
 
 function reprocessAll() {
-  // Clear caches so applyToBlock re-evaluates with new cfg
-  document.querySelectorAll('[data-rtl-dir]').forEach(el => delete el.dataset.rtlDir);
+  // Clear all previously applied styles + caches so processAll re-evaluates from scratch.
+  // Must clear styles (not just attributes) because per-line setProperty !important styles
+  // won't be re-applied if fixCodeBlocks is now off.
+  document.querySelectorAll('[data-rtl-dir]').forEach(resetBlock);
   document.querySelectorAll('[data-rtl-watch]').forEach(el => {
     delete el.dataset.rtlWatch;
     delete el.dataset.rtlInputDir;
