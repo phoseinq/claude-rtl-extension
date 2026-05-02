@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Claude RTL – تنظیم جهت متن",
-  "version": "3.1",
+  "version": "3.1.1",
   "description": "راست‌چین فارسی / چپ‌چین انگلیسی در claude.ai",
   "permissions": ["storage", "tabs"],
   "icons": {
